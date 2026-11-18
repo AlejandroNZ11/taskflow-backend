@@ -1,0 +1,38 @@
+meta {
+  name: Crear tarea
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/tasks/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "project": {{projectId}},
+    "title": "Tarea creada desde Bruno",
+    "description": "Probar la API",
+    "priority": 3,
+    "due_date": "2026-12-15"
+  }
+}
+
+script:post-response {
+  if (res.status === 201) {
+    bru.setEnvVar("taskId", res.body.id);
+  }
+}
+
+tests {
+  test("tarea creada", function() {
+    expect(res.status).to.equal(201);
+    expect(res.body.status).to.equal("todo");
+  });
+}

@@ -1,0 +1,10 @@
+# Producción en AWS usando RDS (PostgreSQL administrado) en lugar del contenedor db.
+#   docker compose -f docker-compose.prod.yml up -d --build
+# En .env: POSTGRES_HOST = endpoint de RDS (ej: taskflow-db.xxxxx.us-east-1.rds.amazonaws.com)
+services:
+  web:
+    build: .
+    restart: always
+    env_file: .env
+    ports:
+      - "80:8000"

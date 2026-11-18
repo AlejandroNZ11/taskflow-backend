@@ -1,0 +1,28 @@
+meta {
+  name: Registro
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/auth/register/
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "{{newUsername}}",
+    "email": "{{newUsername}}@mail.com",
+    "first_name": "Estudiante",
+    "last_name": "Uno",
+    "password": "ClaveSegura123!",
+    "password2": "ClaveSegura123!"
+  }
+}
+
+tests {
+  test("usuario creado (201) o ya existente (400)", function() {
+    expect([201, 400]).to.include(res.status);
+  });
+}

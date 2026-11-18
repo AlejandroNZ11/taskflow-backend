@@ -1,0 +1,19 @@
+meta {
+  name: Comentarios de una tarea
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/comments/?task={{taskId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+tests {
+  test("ok", function() { expect(res.status).to.equal(200); });
+}

@@ -1,0 +1,19 @@
+meta {
+  name: Mis tareas asignadas
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/tasks/mine/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+tests {
+  test("ok", function() { expect(res.status).to.equal(200); });
+}

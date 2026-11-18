@@ -1,0 +1,35 @@
+meta {
+  name: Crear proyecto
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/projects/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "name": "Proyecto desde Bruno",
+    "description": "Creado para probar la API"
+  }
+}
+
+script:post-response {
+  if (res.status === 201) {
+    bru.setEnvVar("projectId", res.body.id);
+  }
+}
+
+tests {
+  test("proyecto creado", function() {
+    expect(res.status).to.equal(201);
+    expect(res.body.owner.username).to.equal(bru.getEnvVar("username"));
+  });
+}

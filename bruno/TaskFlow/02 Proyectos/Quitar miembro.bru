@@ -1,0 +1,25 @@
+meta {
+  name: Quitar miembro
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/projects/{{projectId}}/members/remove/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "username": "ana"
+  }
+}
+
+tests {
+  test("miembro quitado", function() { expect(res.status).to.equal(200); });
+}

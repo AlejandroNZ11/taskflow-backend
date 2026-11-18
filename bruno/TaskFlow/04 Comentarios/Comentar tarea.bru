@@ -1,0 +1,26 @@
+meta {
+  name: Comentar tarea
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/comments/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "task": {{taskId}},
+    "text": "Comentario desde Bruno"
+  }
+}
+
+tests {
+  test("comentario creado", function() { expect(res.status).to.equal(201); });
+}

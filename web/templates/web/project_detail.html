@@ -1,0 +1,88 @@
+{% extends "web/base.html" %}
+{% block title %}{{ project.name }} · TaskFlow{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-start mb-3">
+  <div>
+    <a href="{% url 'web:dashboard' %}" class="small">&larr; Volver</a>
+    <h1 class="h3 mb-1">{{ project.name }}</h1>
+    <p class="text-muted mb-0">{{ project.description }}</p>
+  </div>
+  {% if is_owner %}
+    <form method="post" action="{% url 'web:project_delete' project.pk %}" onsubmit="return confirm('¿Borrar el proyecto y todas sus tareas?');">
+      {% csrf_token %}
+      <button class="btn btn-outline-danger btn-sm">Eliminar proyecto</button>
+    </form>
+  {% endif %}
+</div>
+
+<div class="row g-3">
+  {% for value, label, tasks in columns %}
+    <div class="col-md-4">
+      <div class="kanban-col p-2 rounded">
+        <h2 class="h6 text-uppercase text-muted px-1">{{ label }} <span class="badge bg-secondary">{{ tasks|length }}</span></h2>
+        {% for t in tasks %}
+          <div class="card mb-2 shadow-sm">
+            <div class="card-body p-2">
+              <a href="{% url 'web:task_detail' t.pk %}" class="fw-semibold text-decoration-none">{{ t.title }}</a>
+              <div class="small text-muted">
+                <span class="badge prio-{{ t.priority }}">{{ t.get_priority_display }}</span>
+                {% if t.assigned_to %}👤 {{ t.assigned_to.username }}{% endif %}
+                {% if t.due_date %}· 📅 {{ t.due_date|date:"d/m" }}{% endif %}
+                {% if t.is_overdue %}<span class="badge bg-danger">Vencida</span>{% endif %}
+              </div>
+              <form method="post" action="{% url 'web:task_status' t.pk %}" class="mt-1 d-flex gap-1">
+                {% csrf_token %}
+                {% for s_value, s_label in statuses %}
+                  {% if s_value != value %}
+                    <button name="status" value="{{ s_value }}" class="btn btn-light btn-sm py-0">→ {{ s_label }}</button>
+                  {% endif %}
+                {% endfor %}
+              </form>
+            </div>
+          </div>
+        {% empty %}
+          <p class="small text-muted px-1">Sin tareas</p>
+        {% endfor %}
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<div class="row g-3 mt-3">
+  <div class="col-md-8">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="h5">Nueva tarea</h2>
+        <form method="post" action="{% url 'web:task_create' project.pk %}" class="row g-2">
+          {% csrf_token %}
+          {% for field in task_form %}
+            <div class="{% if field.name == 'description' or field.name == 'title' %}col-12{% else %}col-md-4{% endif %}">
+              <label class="form-label small mb-0" for="{{ field.id_for_label }}">{{ field.label|capfirst }}</label>
+              {{ field }}
+            </div>
+          {% endfor %}
+          <div class="col-12"><button class="btn btn-primary">Agregar tarea</button></div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="h5">Equipo</h2>
+        <ul class="list-unstyled">
+          <li>👑 {{ project.owner.username }} <small class="text-muted">(dueño)</small></li>
+          {% for m in project.members.all %}<li>👤 {{ m.username }}</li>{% endfor %}
+        </ul>
+        {% if is_owner %}
+          <form method="post" action="{% url 'web:project_add_member' project.pk %}" class="d-flex gap-2">
+            {% csrf_token %}
+            {{ member_form.username }}
+            <button class="btn btn-outline-primary">Agregar</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

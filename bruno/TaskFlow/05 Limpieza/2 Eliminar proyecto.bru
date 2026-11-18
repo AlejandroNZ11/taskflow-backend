@@ -1,0 +1,19 @@
+meta {
+  name: Eliminar proyecto
+  type: http
+  seq: 2
+}
+
+delete {
+  url: {{baseUrl}}/api/projects/{{projectId}}/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+tests {
+  test("eliminado", function() { expect(res.status).to.equal(204); });
+}

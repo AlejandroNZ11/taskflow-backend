@@ -1,0 +1,19 @@
+meta {
+  name: Buscar tareas
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/tasks/?search=bruno
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+tests {
+  test("ok", function() { expect(res.status).to.equal(200); });
+}

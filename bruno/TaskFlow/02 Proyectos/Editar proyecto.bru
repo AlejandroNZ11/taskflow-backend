@@ -1,0 +1,25 @@
+meta {
+  name: Editar proyecto (PATCH)
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/api/projects/{{projectId}}/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "description": "Descripción actualizada desde Bruno"
+  }
+}
+
+tests {
+  test("actualizado", function() { expect(res.status).to.equal(200); });
+}

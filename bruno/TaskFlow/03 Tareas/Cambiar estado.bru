@@ -1,0 +1,28 @@
+meta {
+  name: Cambiar estado (PATCH)
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{baseUrl}}/api/tasks/{{taskId}}/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "status": "in_progress"
+  }
+}
+
+tests {
+  test("estado actualizado", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body.status).to.equal("in_progress");
+  });
+}

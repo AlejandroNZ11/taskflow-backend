@@ -1,0 +1,7 @@
+body { background: #f4f6fa; }
+.kanban-col { background: #e9edf3; min-height: 200px; }
+.project-card { transition: transform .1s ease, box-shadow .1s ease; }
+.project-card:hover { transform: translateY(-2px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.1) !important; }
+.prio-1 { background: #6c9a8b; color: #fff; }
+.prio-2 { background: #e0a526; color: #fff; }
+.prio-3 { background: #d9534f; color: #fff; }

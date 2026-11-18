@@ -1,0 +1,19 @@
+meta {
+  name: Eliminar tarea
+  type: http
+  seq: 1
+}
+
+delete {
+  url: {{baseUrl}}/api/tasks/{{taskId}}/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+tests {
+  test("eliminada", function() { expect(res.status).to.equal(204); });
+}

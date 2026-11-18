@@ -1,0 +1,22 @@
+meta {
+  name: Listar proyectos
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/projects/?search=&ordering=-created_at
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+tests {
+  test("lista paginada", function() {
+    expect(res.status).to.equal(200);
+    expect(res.body).to.have.property("results");
+  });
+}
