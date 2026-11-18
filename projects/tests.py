@@ -189,3 +189,10 @@ class SeedAndHealthTests(APITestCase):
         res = self.client.get("/health/")
         self.assertEqual(res.status_code, 200)
         self.assertTrue(res.json()["database"])
+
+    def test_health_con_host_interno_de_render(self):
+        # El health check de Render llega con un Host que no está en ALLOWED_HOSTS
+        res = self.client.get("/health/", HTTP_HOST="10.0.0.5:10000")
+        self.assertEqual(res.status_code, 200)
+        # El resto del sitio sigue rechazando hosts no permitidos
+        self.assertEqual(self.client.get("/login/", HTTP_HOST="10.0.0.5:10000").status_code, 400)

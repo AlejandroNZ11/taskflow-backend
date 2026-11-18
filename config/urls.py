@@ -1,20 +1,13 @@
 from django.contrib import admin
-from django.db import connection
-from django.http import JsonResponse
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
+from .middleware import health_response
+
 
 def health(request):
-    """Chequeo de salud para Docker / AWS: verifica que la base responda."""
-    try:
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT 1")
-        db_ok = True
-    except Exception:
-        db_ok = False
-    status = 200 if db_ok else 503
-    return JsonResponse({"status": "ok" if db_ok else "error", "database": db_ok}, status=status)
+    """Chequeo de salud (normalmente lo responde HealthCheckMiddleware antes de llegar acá)."""
+    return health_response()
 
 
 urlpatterns = [
